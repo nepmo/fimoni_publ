@@ -1,0 +1,23 @@
+{
+  "fimoni_patternid_config": [
+    { "id": "anystring", "pattern": "⟨anystring⟩" },
+
+    { "id": "d00001", "pattern": "exports/⟨YYYY⟩" },
+    { "id": "d00002", "pattern": "archive" },
+    { "id": "d00003", "pattern": ["drafts", "Entwürfe"] },
+
+    { "id": "f00001", "pattern": "sales_report_⟨YYYYMMDD⟩" },
+    { "id": "f00002", "pattern": "report_⟨YYYY\\1⟩_⟨quarter⟩" },
+    { "id": "f00003", "pattern": ["backup_data", "backup_⟨YYYYMMDD⟩⟨optional:_full⟩"] },
+    { "id": "f00004", "pattern": "fimoni_canary" },
+    { "id": "f00005", "pattern": "⟨anystring⟩_⟨old|alt|final⟩" },
+    { "id": "f00006", "pattern": "legacy_import_⟨YYYY⟩", "tric": false },
+
+    { "id": "s00001", "pattern": "Summary" },
+    { "id": "s00002", "pattern": ["RawData", "Data_⟨anystring⟩"] },
+
+    { "id": "c00001", "pattern": ["id", "name", "email"] },
+    { "id": "c00002", "pattern": "total_⟨amount|value⟩" },
+    { "id": "c00003", "pattern": "⟨Mon⟩_⟨YYYY\\1⟩" }
+  ]
+}

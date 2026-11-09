@@ -1,0 +1,62 @@
+{
+    "module_act": {
+        "re_tkey": ".*",
+        "re_tcat": "test1",
+        "verbosity": 1,
+        "save": true,
+        "show": true
+    },
+
+    "module_tasks": [
+        {"tkey": "fimoni_test1", "tcat": "test1"}
+    ],
+
+    "module_server": {
+        "name": "server_name",
+        "autostart": false
+    },
+
+    "fimoni_test1": {
+        "monisteps": ["monitor"],
+        "monimode": "watchdog",
+        "watchdog": {
+            "params": {
+                "tgt": "{path_d_case}databuild/fssources/",
+                "includes": [".*\\.xlsx$", ".*\\.csv$", ".*\\.txt$"],
+                "excludes": [".*SFConflict.*", "^~\\$.*", ".*\\.~lock\\..*", ".*\\(in progress\\).*"],
+
+                "path_dir_config": "/path/to/config/dpfimoni_test_dir_config.json",
+                "path_pattern_keys": "/path/to/config/dpfimoni_test_patternid_config.json",
+                "path_ext_dir_config": {
+                    "shared": "/path/to/shared/config/shared_patternid_config.json"
+                },
+
+                "path_log": "/path/to/fimoni/log",
+                "path_known_files": "/path/to/fimoni/known_files.json",
+                "path_translate_yaml": "/path/to/vault/keeper_folders.yaml",
+                "path_user_map": "/path/to/config/dpfimoni_test_user_map.json",
+                "path_message_blacklist": "/path/to/fimoni/message_blacklist.jsonl",
+
+                "path_config_info": "{path_d_case}fimoni/fimoni_config_info.xlsx",
+                "path_filestep_info": "{path_d_case}fimoni/fimoni_filestep_info.jsonl",
+
+                "minerva_bot": "fimoni_bot",
+                "minerva_developer": "fimoni_developer",
+                "minerva_developer_test": "fimoni_developer_test",
+
+                "issue_tracking": "on",
+                "issue_ack_websocket": true,
+                "issue_ack_poll_secs": 300,
+                "recurring_canary_checks": true,
+                "convert_to_windows_paths": true,
+                "check_existing_files": false,
+
+                "normalization": {
+                    "replace_alt_spaces": true,
+                    "ignore_case": false,
+                    "replace_special_characters": false
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,177 @@
+{
+  "fimoni_dir_pattern": [
+    {
+      "dir_pattern_id": "d00001",
+      "comment": "yearly export folders, e.g. exports/2026; the '/' turns the pattern into a chain of sub_dirs",
+      "minerva_hooks": {
+        "prod": "prodchannelid0000000000001",
+        "tests": "testchannelid0000000000001",
+        "dev": "fimoni_developer",
+        "tests_dev": "fimoni_developer_test"
+      },
+      "users_2b_notified": ["alice"],
+      "normalization": {
+        "replace_alt_spaces": true,
+        "ignore_case": true,
+        "replace_special_characters": false
+      },
+      "notify_on": ["insert", "remove"],
+      "files": [
+        {
+          "file_pattern_id": "f00001",
+          "extension": "txt",
+          "comment": "short list form: report inserts and removals, both allowed",
+          "notify_on": ["insert", "remove"],
+          "message_insmod": "New sales report received."
+        },
+        {
+          "file_pattern_id": "f00002",
+          "extension": "xlsx",
+          "comment": "quarterly report; the year in the name must match the folder year (backreference)",
+          "priority": "important",
+          "table": "quarterly_report",
+          "mode": "latest:$1",
+          "users_2b_notified": ["bob"],
+          "notify_on": {
+            "insert": {
+              "message": "New quarterly report, it will be loaded into the database tonight."
+            },
+            "modify": {
+              "execute": ["check_xlsx_calculated"]
+            },
+            "remove": {
+              "is_allowed": false,
+              "priority": "urgent",
+              "message": "Quarterly reports must not be deleted, please restore the file.",
+              "users_2b_notified": ["carol"]
+            }
+          },
+          "sheets": [
+            {
+              "sheet_pattern_id": "s00001",
+              "comment": "required sheet with required columns, not loaded into the database itself",
+              "tric_db": false,
+              "notify_on": {
+                "remove": {
+                  "is_allowed": false,
+                  "message": "The Summary sheet is required."
+                }
+              },
+              "columns": [
+                {
+                  "column_pattern_id": "c00001",
+                  "comment": "key columns; a missing one is reported and tracked as an issue",
+                  "notify_on": {
+                    "remove": { "is_allowed": false }
+                  }
+                },
+                {
+                  "column_pattern_id": "c00002",
+                  "notify_on": {
+                    "insert": { "message": "Total column added." }
+                  }
+                },
+                {
+                  "column_pattern_id": "c00003",
+                  "comment": "month columns such as Jan_2026; the year must match the folder year",
+                  "notify_on": ["insert"]
+                }
+              ]
+            },
+            {
+              "sheet_pattern_id": "s00002",
+              "comment": "raw data goes to its own table and is announced in the data team's channel",
+              "table": "raw_data",
+              "minerva_hooks": {
+                "prod": "datachannelid0000000000001",
+                "tests": "testchannelid0000000000002"
+              },
+              "notify_on": ["insert", "remove"]
+            },
+            {
+              "sheet_pattern_id": "anystring",
+              "comment": "concrete patterns win, so this wildcard only catches unknown sheets",
+              "notify_on": {
+                "insert": {
+                  "is_allowed": false,
+                  "message": "Unknown sheet, please remove it or ask the data team."
+                }
+              }
+            }
+          ]
+        },
+        {
+          "file_pattern_id": "f00003",
+          "extension": "xlsx",
+          "comment": "backups may come and go silently, but must not be edited",
+          "notify_on": {
+            "modify": {
+              "is_allowed": false,
+              "message": "Backups are read-only, please edit the original report."
+            }
+          }
+        },
+        {
+          "file_pattern": "daily_export_⟨today-7⟩",
+          "extension": "csv",
+          "comment": "inline pattern instead of an id; the date in the name must lie within the last 7 days",
+          "table": "daily_export",
+          "notify_on": ["insert"]
+        },
+        {
+          "file_pattern_id": "f00004",
+          "extension": "txt",
+          "test_file": true,
+          "comment": "canary self-test target: fimoni creates, modifies and deletes a [synthetic] file here",
+          "notify_on": ["insert", "modify", "remove"]
+        },
+        {
+          "file_pattern_id": "f00005",
+          "extension": "xlsx",
+          "comment": "personal copies do not belong in the shared folder",
+          "notify_on": {
+            "insert": {
+              "is_allowed": false,
+              "message": "Please keep personal copies in your own library."
+            }
+          }
+        },
+        {
+          "file_pattern_id": "anystring",
+          "extension": "",
+          "comment": "fallback: every other new file is reported as not allowed",
+          "notify_on": {
+            "insert": { "is_allowed": false }
+          }
+        }
+      ],
+      "sub_dirs": [
+        {
+          "dir_pattern_id": "d00002",
+          "tric": false,
+          "comment": "the archive is switched off completely"
+        },
+        {
+          "dir_pattern_id": "d00003",
+          "comment": "drafts: own channel and reviewer, every change is reported",
+          "users_2b_notified": ["carol"],
+          "minerva_hooks": {
+            "prod": "draftchannelid000000000001",
+            "tests": "testchannelid0000000000003"
+          },
+          "files": [
+            {
+              "file_pattern_id": "anystring",
+              "extension": "xlsx",
+              "notify_on": {
+                "insert": {},
+                "modify": { "execute": ["check_xlsx_calculated"] },
+                "remove": {}
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

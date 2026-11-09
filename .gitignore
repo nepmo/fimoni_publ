@@ -1,0 +1,12 @@
+# Local configs with real webhooks/paths — never commit these
+*_local.json
+*_local.jsonl
+.env
+
+# Logs
+*.log
+log/
+
+# Python
+__pycache__/
+*.pyc
